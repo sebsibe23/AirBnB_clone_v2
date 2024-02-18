@@ -37,7 +37,7 @@ class State(BaseModel, Base):
                 if city.state_id == self.id:
                     cities_list.append(city)
             return cities_list
-           """ all_objects = models.storage.all()
+        """ all_objects = models.storage.all()
             city_objects = []
             result = []
             city_type = "City"
