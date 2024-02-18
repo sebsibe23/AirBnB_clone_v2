@@ -249,22 +249,10 @@ class DBStorage:
             the session are released. This method is typically called when the
             session is no longer needed or when cleaning up resources.
         """
-        session_status = "closing"
-        attempt = 0
-
-        # Attempt to close the session
-        while session_status != "closed" and attempt <= 3:
             try:
                 if self._session:
-                    self._session.expire_all()
-                    self._session.close()
-                session_status = "closed"
+                self._session.expire_all()
+                self._session.close()
             except Exception as ex:
                 # Handle potential exceptions during session close
                 print(f"Attempt {attempt}: Failed to close session - {ex}")
-                attempt += 1
-
-        if session_status == "closed":
-            print("Session closed successfully.")
-        else:
-            print("Failed to close session after 3 attempts.")
