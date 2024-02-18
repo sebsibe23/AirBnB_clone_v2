@@ -1,58 +1,127 @@
 #!/usr/bin/python3
-"""
-starts a Flask web application
+"""Flask Application with Multiple View Functions
+
+This code implements a Flask application with multiple
+view functions that handle different routes.
+Each view function returns a specific response
+based on the requested route.
+
 """
 
 from flask import Flask, render_template
+
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 
 
-@app.route('/', strict_slashes=False)
-def index():
-    """returns Hello HBNB!"""
+@app.route('/')
+def hello_world():
+    """Returns a greeting message.
+
+    Returns:
+        str: A greeting message.
+
+    """
     return 'Hello HBNB!'
 
 
-@app.route('/hbnb', strict_slashes=False)
-def hbnb():
-    """returns HBNB"""
+@app.route('/hbnb')
+def hello():
+    """Returns a specific text.
+
+    Returns:
+        str: A specific text.
+
+    """
     return 'HBNB'
 
 
-@app.route('/c/<text>', strict_slashes=False)
-def cisfun(text):
-    """display “C ” followed by the value of the text variable"""
-    return 'C ' + text.replace('_', ' ')
+@app.route('/c/<text>')
+def c_text(text):
+    """Replaces underscores with spaces in the text and
+    returns the modified text.
+
+    Args:
+        text (str): The input text.
+
+    Returns:
+        str: The modified text.
+
+    """
+    text = text.replace('_', ' ')
+    return 'C {}'.format(text)
 
 
-@app.route('/python', strict_slashes=False)
-@app.route('/python/<text>', strict_slashes=False)
-def pythoniscool(text='is cool'):
-    """display “Python ”, followed by the value of the text variable"""
-    return 'Python ' + text.replace('_', ' ')
+@app.route('/python/')
+@app.route('/python/<text>')
+def python_text(text='is cool'):
+    """Replaces underscores with spaces in the text and
+    returns the modified text.
+    If no text is provided, a default text is used.
+
+    Args:
+        text (str, optional): The input text. Defaults to 'is cool'.
+
+    Returns:
+        str: The modified text.
+
+    """
+    text = text.replace('_', ' ')
+    return 'Python {}'.format(text)
 
 
-@app.route('/number/<int:n>', strict_slashes=False)
-def imanumber(n):
-    """display “n is a number” only if n is an integer"""
-    return "{:d} is a number".format(n)
+@app.route('/number/<int:n>')
+def number_text(n):
+    """Returns a message indicating whether
+    the provided number is an integer.
+    If the number is an integer, it is converted to a string.
+
+    Args:
+        n (int): The input number.
+
+    Returns:
+        str: A message indicating whether the number is an integer.
+
+    """
+    n = str(n)
+    return '{} is a number'.format(n)
 
 
-@app.route('/number_template/<int:n>', strict_slashes=False)
-def numbersandtemplates(n):
-    """display a HTML page only if n is an integer"""
-    return render_template('5-number.html', n=n)
+@app.route('/number_template/<int:n>')
+def html_num(n):
+    """Returns an HTML page if n is an integer.
+
+    Args:
+        n (int): The input number.
+
+    Returns:
+        str: An HTML page.
+
+    """
+    try:
+        n = str(n)
+        return render_template('5-number.html', n=n)
+    except Exception as e:
+        return 'An error occurred: {}'.format(str(e))
 
 
-@app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
-def numbersandevenness(n):
-    """display a HTML page only if n is an integer"""
-    if n % 2 == 0:
-        evenness = 'even'
-    else:
-        evenness = 'odd'
-    return render_template('6-number_odd_or_even.html', n=n,
-                           evenness=evenness)
+@app.route('/number_odd_or_even/<int:n>')
+def odd_or_even(n):
+    """Returns an HTML page indicating
+    whether the provided number is odd or even.
+
+    Args:
+        n (int): The input number.
+
+    Returns:
+        str: An HTML page indicating whether the number is odd or even.
+
+    """
+    try:
+        return render_template('6-number_odd_or_even.html', n=n)
+    except Exception as e:
+        return 'An error occurred: {}'.format(str(e))
+
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000'
+    app.run(host='0.0.0.0', port=5000)
