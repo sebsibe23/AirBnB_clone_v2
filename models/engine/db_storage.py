@@ -255,7 +255,9 @@ class DBStorage:
         # Attempt to close the session
         while session_status != "closed" and attempt <= 3:
             try:
-                self.__session.close()
+                if self._session:
+                    self._session.expire_all()
+                    self._session.close()
                 session_status = "closed"
             except Exception as ex:
                 # Handle potential exceptions during session close

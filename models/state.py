@@ -32,7 +32,8 @@ class State(BaseModel, Base):
             list: A list of City objects associated with the state.
         """
         try:
-            all_objects = models.storage.all()
+            return self._storage.all(City).filter(City.state_id == self.id)
+           """ all_objects = models.storage.all()
             city_objects = []
             result = []
             city_type = "City"
@@ -50,5 +51,7 @@ class State(BaseModel, Base):
                     result.append(city)
 
             return result
+        """
+
         except Exception as e:
             print(f"An error occurred: {e}")

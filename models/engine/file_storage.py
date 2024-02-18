@@ -157,6 +157,8 @@ class FileStorage:
         """
         try:
             self.reload()
+            if self._file:
+                self._file.close()
         except Exception as e:
             raise Exception("An error occurred in the 'close' method: " +
                             str(e))
