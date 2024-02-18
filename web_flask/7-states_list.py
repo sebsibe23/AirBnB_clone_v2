@@ -5,35 +5,24 @@ This code implements a Flask application with
 a route that performs a specific task.
 
 """
-
-from flask import Flask
+from flask import Flask, render_template
+from models import storage
+from models.state import State
 
 app = Flask(__name__)
-app.url_map.strict_slashes = False
 
 
-@app.route('/')
-def hello_world():
-    """Returns a greeting message.
-
-    Returns:
-        str: A greeting message.
-
-    """
-    return 'Hello HBNB!'
+@app.teardown_appcontext
+def teardown_appcontext(exception):
+    storage.close()
 
 
-@app.route('/do_something')
-def do_something():
-    """Performs a specific task and returns a message.
+@app.route('/states_list', strict_slashes=False)
+def states_list():
+    states = storage.all(State)
+    sorted_states = sorted(states.values(), key=lambda state: state.name)
 
-    Returns:
-        str: A message indicating that the task has been performed.
-
-    """
-    # Add your code here to perform the desired task
-
-    return 'Task has been performed.'
+    return render_template('7-states_list.html', states=sorted_states)
 
 
 if __name__ == '__main__':
