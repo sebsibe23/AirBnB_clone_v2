@@ -32,7 +32,11 @@ class State(BaseModel, Base):
             list: A list of City objects associated with the state.
         """
         try:
-            return self._storage.all(City).filter(City.state_id == self.id)
+            cities_list = []
+            for city in list(storage.all(City).values()):
+                if city.state_id == self.id:
+                    cities_list.append(city)
+            return cities_list
            """ all_objects = models.storage.all()
             city_objects = []
             result = []
